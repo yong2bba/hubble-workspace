@@ -1,25 +1,28 @@
 ---
-status: deploying
+status: complete
 updated: 2026-08-15
-summary: "Local implementation and container verification passed; Homebox deployment is next"
-current_focus: Homebox deployment
-next_step: commit/push, deploy Compose, install Traefik route, verify live
-blockers: []
+summary: "Hubble Workspace is live and verified at md.yongduct.work"
+current_focus: none
+next_step: optional Hermes MCP client registration when requested
+blockers:
+  - "Workboard audit card mutation denied by delegate-task child-context guard"
 ---
 
 # Handoff
 
 ## Last Work
-- Hubble shared UI 기반 read-only web, REST backend, 7-tool MCP를 구현했다.
-- path traversal/symlink/hash-conflict/public mutation/auth/origin tests 7개가 통과했다.
-- production build, React Compiler audit(3 compiled, 0 failed), Docker build/smoke가 통과했다.
-- Docker smoke에서 public files `[]`, mutation HTTP 405, MCP 7 tools, read-only rootfs, no host mount/no Docker socket을 확인했다.
+- GitHub `yong2bba/hubble-workspace`에 공개 소스를 push했다.
+- Homebox에 image/container/named volume을 배포하고 Traefik으로 `md.yongduct.work`를 연결했다.
+- production container `healthy`, read-only rootfs, node user, host home/Docker socket 미노출을 확인했다.
+- public API는 files `[]`, mutation 405, public `/mcp` 404이며 CSP가 적용됐다.
+- SSH loopback tunnel에서 official MCP client로 7 tools와 files `[]`를 확인했고, 무자격 요청은 401이었다.
+- 브라우저 empty-state visual QA가 PASS했다. production 의존성 audit은 0 vulnerabilities였다.
 
 ## Current State
-로컬 구현과 컨테이너 검증이 끝났다. production named volume에는 아직 기존 문서나 새 공개 문서가 없다.
+서비스가 공개 read-only empty workspace로 운영 중이다. named volume에는 `.trash`, `.workspace` 외 공개 Markdown 문서가 없다.
 
 ## Next Safe Action
-GitHub에 push한 뒤 Homebox `/home/yongjin/homebox/apps/hubble-workspace`에서 Compose를 배포하고 Traefik route를 추가한다.
+사용자가 원할 때 별도 Hermes profile에 SSH tunnel/서비스 자격을 사용한 MCP client를 등록한다.
 
 ## Needs User Decision
 없음. 사용자가 배포와 도메인을 명시적으로 승인했다.

@@ -1,12 +1,15 @@
 # Tasks
 
 ## Now
-- [ ] Homebox deploy + Traefik route
-- [ ] external UI/public API/internal MCP verification
-- [ ] GitHub/Workboard evidence closure
+- [x] Homebox deploy + Traefik route
+- [x] external UI/public API/internal MCP verification
+- [x] GitHub evidence closure
 
 ## Next
 - [ ] 필요가 확인되면 Hermes MCP client 연결 등록
+
+## Blocked
+- [ ] Workboard audit card: child-context mutation guard가 CLI create를 거부함
 
 ## Later
 - [ ] 필요가 확인되면 private workspace/auth 도입
