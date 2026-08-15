@@ -30,6 +30,7 @@ export class WorkspaceError extends Error {
 		message: string,
 		readonly code:
 			| "invalid_path"
+			| "invalid_input"
 			| "not_found"
 			| "conflict"
 			| "too_large"

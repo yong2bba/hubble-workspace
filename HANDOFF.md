@@ -1,36 +1,30 @@
 ---
-status: complete
+status: deploying
 updated: 2026-08-15
-summary: "Hubble Workspace is live and verified at md.yongduct.work"
-current_focus: none
-next_step: optional Hermes MCP client registration when requested
+summary: "Anonymous Hubble editing and MCP 2026-07-28 are locally verified; Homebox redeploy is next"
+current_focus: Homebox redeploy
+next_step: pull the pushed commit, rebuild, and verify the live UI/API/MCP
 blockers:
   - "Workboard audit card mutation denied by delegate-task child-context guard"
+  - "AGENTS.md policy update requires separate protected-file approval"
 ---
 
 # Handoff
 
 ## Last Work
-- GitHub `yong2bba/hubble-workspace`에 공개 소스를 push했다.
-- Homebox에 image/container/named volume을 배포하고 Traefik으로 `md.yongduct.work`를 연결했다.
-- production container `healthy`, read-only rootfs, node user, host home/Docker socket 미노출을 확인했다.
-- public API는 files `[]`, mutation 405, public `/mcp` 404이며 CSP가 적용됐다.
-- SSH loopback tunnel에서 official MCP client로 7 tools와 files `[]`를 확인했고, 무자격 요청은 401이었다.
-- 브라우저 empty-state visual QA가 PASS했다. production 의존성 audit은 0 vulnerabilities였다.
+- 사용자 요청에 따라 Hubble editor를 `editable=true`로 전환하고 새 문서 생성과 SHA-256 충돌 검사 저장을 연결했다.
+- 공개 REST에 `POST /api/files`, `PUT /api/files/content`를 추가했다. 삭제·이동·기타 mutation은 계속 405다.
+- MCP를 stable SDK v2와 protocol `2026-07-28`로 마이그레이션했다. Host/Origin/Bearer 검증과 legacy transport 거부를 테스트했다.
+- 서버 테스트 9/9, builds, React Compiler 3/0, Biome, Docker smoke가 통과했다.
 
 ## Current State
-서비스가 공개 read-only empty workspace로 운영 중이다. named volume에는 `.trash`, `.workspace` 외 공개 Markdown 문서가 없다.
+현재 production은 직전 read-only 버전이다. 변경은 로컬에서 검증됐으며 Homebox 재배포가 다음 단계다.
 
 ## Next Safe Action
-사용자가 원할 때 별도 Hermes profile에 SSH tunnel/서비스 자격을 사용한 MCP client를 등록한다.
+변경 commit을 Homebox에서 pull/build/up한 뒤 외부 문서 생성·편집, 내부 MCP v2 협상과 보안 경계를 다시 검증한다.
 
 ## Needs User Decision
-없음. 사용자가 배포와 도메인을 명시적으로 승인했다.
+없음. 사용자가 임시 공개 편집을 명시적으로 승인했다.
 
-## Blockers
-없음.
-
-## Verification
-- Upstream commit: `c4235c9eeae77958d966d2fe7c44ce91e5a89aca`
-- Homebox Docker server: 29.7.1
-- `md.yongduct.work`: HTTP 404 before deployment
+## Risk
+인증이 없으므로 URL을 아는 누구나 문서를 생성·수정할 수 있다. 개인·비공개 자료를 넣기 전 인증을 도입해야 한다.

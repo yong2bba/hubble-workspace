@@ -9,3 +9,6 @@
 - Published `yong2bba/hubble-workspace`, deployed a healthy Homebox container/named volume, and installed the Traefik route for `md.yongduct.work`.
 - Verified public files `[]`, public mutation 405, public MCP 404, internal official MCP client 7 tools, unauthorized 401, browser empty-state PASS, and production audit 0 vulnerabilities.
 - Workboard audit card creation was blocked by the delegate-task child-context mutation guard; no policy bypass was attempted.
+- User explicitly approved temporary anonymous editing. Added public Markdown create/update with SHA-256 conflict checks while destructive public methods remain blocked.
+- Migrated MCP from SDK v1 / protocol 2025-06-18 to stable SDK v2 / protocol 2026-07-28 with request-scoped servers, Host/Origin validation, bearer auth, and legacy transport rejection.
+- Passed 9 server tests, web/server builds, React Compiler audit (3/0), Biome (22 files), and an ephemeral Docker v2/public-edit smoke; resources were removed.

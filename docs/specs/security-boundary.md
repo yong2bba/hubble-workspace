@@ -6,7 +6,10 @@
 - `GET /api/files`
 - `GET /api/files/content?path=...`
 - `GET /api/search?q=...`
-- All `/api` non-GET methods return 405
+- `POST /api/files` creates Markdown without overwrite
+- `PUT /api/files/content` updates only with matching SHA-256
+- Destructive and unknown `/api` mutation methods return 405
+- Anonymous create/update is a temporary accepted risk; private material requires authentication
 - CSP blocks frames, objects, remote scripts, and remote connections
 
 ## Agent plane (`:3001`)

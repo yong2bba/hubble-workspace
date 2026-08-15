@@ -32,7 +32,7 @@ async function start() {
 }
 
 describe("public HTTP API", () => {
-	it("lists and reads but rejects mutation methods", async () => {
+	it("lists and reads Markdown with security headers", async () => {
 		const base = await start();
 		const list = await fetch(`${base}/api/files`);
 		expect(list.status).toBe(200);
@@ -46,15 +46,39 @@ describe("public HTTP API", () => {
 		expect(((await content.json()) as { content: string }).content).toBe(
 			"# Public\n",
 		);
-
-		const mutation = await fetch(`${base}/api/files`, { method: "POST" });
-		expect(mutation.status).toBe(405);
-		expect(await mutation.json()).toMatchObject({
-			error: "Public API is read-only",
-		});
 		expect(list.headers.get("content-security-policy")).toContain(
 			"frame-src 'none'",
 		);
+	});
+
+	it("creates and updates Markdown while destructive HTTP methods stay blocked", async () => {
+		const base = await start();
+		const created = await fetch(`${base}/api/files`, {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({ path: "drafts/new.md", content: "# New\n" }),
+		});
+		expect(created.status).toBe(201);
+		const createdBody = (await created.json()) as { sha256: string };
+
+		const updated = await fetch(`${base}/api/files/content`, {
+			method: "PUT",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({
+				path: "drafts/new.md",
+				content: "# Updated\n",
+				expectedSha256: createdBody.sha256,
+			}),
+		});
+		expect(updated.status).toBe(200);
+		expect(((await updated.json()) as { content: string }).content).toBe(
+			"# Updated\n",
+		);
+
+		const destructive = await fetch(`${base}/api/files/content`, {
+			method: "DELETE",
+		});
+		expect(destructive.status).toBe(405);
 	});
 
 	it("does not disclose traversal paths", async () => {

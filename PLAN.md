@@ -6,8 +6,8 @@
 - 제품·보안·배포 결정을 문서화
 
 ## Phase 1 — Web UI
-- Hubble shared editor/sidebar를 재사용하는 read-only React/Vite 앱
-- REST 기반 파일 목록·본문·검색
+- Hubble shared editor/sidebar를 재사용하는 editable React/Vite 앱
+- REST 기반 파일 목록·본문·검색·생성·수정
 - 빈 workspace와 오류 상태 처리
 
 ## Phase 2 — Backend + MCP

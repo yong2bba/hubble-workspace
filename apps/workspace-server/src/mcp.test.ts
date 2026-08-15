@@ -1,9 +1,12 @@
 import { mkdtemp, rm } from "node:fs/promises";
 import type { Server } from "node:http";
+import { request } from "node:http";
 import os from "node:os";
 import path from "node:path";
-import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+import {
+	Client,
+	StreamableHTTPClientTransport,
+} from "@modelcontextprotocol/client";
 import { afterEach, describe, expect, it } from "vitest";
 import { createMcpApp } from "./mcp.js";
 import { WorkspaceStore } from "./workspace.js";
@@ -44,49 +47,105 @@ function text(result: unknown): string {
 	return first.text;
 }
 
-describe("MCP Streamable HTTP", () => {
-	it("requires bearer authentication and rejects browser origins", async () => {
+const modernListBody = JSON.stringify({
+	jsonrpc: "2.0",
+	id: 1,
+	method: "tools/list",
+	params: {
+		_meta: {
+			"io.modelcontextprotocol/protocolVersion": "2026-07-28",
+			"io.modelcontextprotocol/clientCapabilities": {},
+			"io.modelcontextprotocol/clientInfo": {
+				name: "raw-test",
+				version: "1.0.0",
+			},
+		},
+	},
+});
+
+async function rawPost(
+	url: URL,
+	headers: Record<string, string>,
+	body: string,
+): Promise<number> {
+	return new Promise<number>((resolve, reject) => {
+		const req = request(
+			{
+				hostname: url.hostname,
+				port: url.port,
+				path: url.pathname,
+				method: "POST",
+				headers: { ...headers, "content-length": Buffer.byteLength(body) },
+			},
+			(res) => {
+				res.resume();
+				res.on("end", () => resolve(res.statusCode ?? 0));
+			},
+		);
+		req.on("error", reject);
+		req.end(body);
+	});
+}
+
+describe("MCP 2026-07-28 Streamable HTTP", () => {
+	it("requires bearer auth and rejects hostile Host and Origin headers", async () => {
 		const { url } = await start();
+		const baseHeaders = {
+			"content-type": "application/json",
+			accept: "application/json, text/event-stream",
+		};
 		const unauthorized = await fetch(url, {
 			method: "POST",
-			headers: {
-				"content-type": "application/json",
-				accept: "application/json, text/event-stream",
-			},
-			body: JSON.stringify({
-				jsonrpc: "2.0",
-				id: 1,
-				method: "initialize",
-				params: {},
-			}),
+			headers: baseHeaders,
+			body: modernListBody,
 		});
 		expect(unauthorized.status).toBe(401);
 
 		const origin = await fetch(url, {
 			method: "POST",
 			headers: {
+				...baseHeaders,
 				authorization: "Bearer test-token",
 				origin: "https://evil.example",
-				"content-type": "application/json",
-				accept: "application/json, text/event-stream",
 			},
-			body: JSON.stringify({
-				jsonrpc: "2.0",
-				id: 1,
-				method: "initialize",
-				params: {},
-			}),
+			body: modernListBody,
 		});
 		expect(origin.status).toBe(403);
+
+		const hostileHostStatus = await rawPost(
+			url,
+			{
+				...baseHeaders,
+				authorization: "Bearer test-token",
+				host: "evil.example",
+			},
+			modernListBody,
+		);
+		expect(hostileHostStatus).toBe(403);
 	});
 
-	it("initializes with the official client and completes a file workflow", async () => {
+	it("rejects legacy-only transport methods", async () => {
+		const { url, token } = await start();
+		for (const method of ["GET", "DELETE"]) {
+			const response = await fetch(url, {
+				method,
+				headers: { authorization: `Bearer ${token}` },
+			});
+			expect(response.status).toBe(405);
+		}
+	});
+
+	it("negotiates 2026-07-28 and completes a file workflow", async () => {
 		const { url, token } = await start();
 		const transport = new StreamableHTTPClientTransport(url, {
 			requestInit: { headers: { authorization: `Bearer ${token}` } },
 		});
-		client = new Client({ name: "workspace-test", version: "1.0.0" });
+		client = new Client(
+			{ name: "workspace-test", version: "1.0.0" },
+			{ versionNegotiation: { mode: { pin: "2026-07-28" } } },
+		);
 		await client.connect(transport);
+		expect(client.getNegotiatedProtocolVersion()).toBe("2026-07-28");
 
 		const tools = await client.listTools();
 		expect(tools.tools.map((tool) => tool.name)).toEqual([

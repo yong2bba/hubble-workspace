@@ -21,7 +21,7 @@ Homebox의 격리된 Docker named volume을 사람과 에이전트가 함께 쓰
 
 ## Success Criteria
 - 외부 `https://md.yongduct.work`가 Hubble UI를 제공한다.
-- 공개 HTTP API는 읽기 전용이며 mutation route가 없다.
+- 공개 HTTP API는 Markdown 생성·수정을 허용하고, 삭제·이동은 차단한다.
 - MCP는 별도 내부 포트와 Bearer token을 요구한다.
 - backend만 named volume을 소유하고 경로 이탈·symlink를 차단한다.
 - 빈 volume으로 시작하고 기존 작성 문서를 포함하지 않는다.

@@ -1,15 +1,25 @@
-import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+import {
+	Client,
+	StreamableHTTPClientTransport,
+} from "@modelcontextprotocol/client";
 
 const url = process.env.MCP_URL;
 const token = process.env.MCP_API_TOKEN;
 if (!url || !token) throw new Error("MCP_URL and MCP_API_TOKEN are required");
 
-const client = new Client({ name: "hubble-workspace-smoke", version: "1.0.0" });
+const client = new Client(
+	{ name: "hubble-workspace-smoke", version: "1.0.0" },
+	{ versionNegotiation: { mode: { pin: "2026-07-28" } } },
+);
 const transport = new StreamableHTTPClientTransport(new URL(url), {
 	requestInit: { headers: { authorization: `Bearer ${token}` } },
 });
 await client.connect(transport);
+if (client.getNegotiatedProtocolVersion() !== "2026-07-28") {
+	throw new Error(
+		`Unexpected MCP protocol: ${client.getNegotiatedProtocolVersion()}`,
+	);
+}
 try {
 	const tools = await client.listTools();
 	const files = await client.callTool({ name: "list_files", arguments: {} });

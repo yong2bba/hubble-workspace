@@ -19,13 +19,23 @@ export function createPublicApp(
 		);
 		next();
 	});
+	app.use(express.json({ limit: "1mb" }));
 
 	app.get("/api/health", (_req, res) =>
-		res.json({ status: "ok", mode: "public-read-only" }),
+		res.json({ status: "ok", mode: "public-editable" }),
 	);
 	app.get("/api/files", async (_req, res, next) => {
 		try {
 			res.json({ files: await store.list() });
+		} catch (cause) {
+			next(cause);
+		}
+	});
+	app.post("/api/files", async (req, res, next) => {
+		try {
+			const path = bodyString(req.body, "path");
+			const content = bodyString(req.body, "content");
+			res.status(201).json(await store.create(path, content));
 		} catch (cause) {
 			next(cause);
 		}
@@ -35,6 +45,16 @@ export function createPublicApp(
 			const requestedPath =
 				typeof req.query.path === "string" ? req.query.path : "";
 			res.json(await store.read(requestedPath));
+		} catch (cause) {
+			next(cause);
+		}
+	});
+	app.put("/api/files/content", async (req, res, next) => {
+		try {
+			const path = bodyString(req.body, "path");
+			const content = bodyString(req.body, "content");
+			const expectedSha256 = bodyString(req.body, "expectedSha256");
+			res.json(await store.update(path, content, expectedSha256));
 		} catch (cause) {
 			next(cause);
 		}
@@ -49,7 +69,7 @@ export function createPublicApp(
 	});
 	app.all(/^\/api(?:\/.*)?$/, (req, res) => {
 		if (req.method !== "GET")
-			return res.status(405).json({ error: "Public API is read-only" });
+			return res.status(405).json({ error: "API method is not allowed" });
 		return res.status(404).json({ error: "API route not found" });
 	});
 
@@ -79,4 +99,13 @@ export function createPublicApp(
 	};
 	app.use(errors);
 	return app;
+}
+
+function bodyString(body: unknown, key: string): string {
+	if (!body || typeof body !== "object")
+		throw new WorkspaceError("JSON request body is required", "invalid_input");
+	const value = (body as Record<string, unknown>)[key];
+	if (typeof value !== "string")
+		throw new WorkspaceError(`${key} must be a string`, "invalid_input");
+	return value;
 }

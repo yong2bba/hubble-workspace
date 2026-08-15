@@ -8,11 +8,18 @@
 **Reason:** Homebox에 Docker, Traefik, wildcard Cloudflare Tunnel, 상시 운영 기반이 이미 있다.
 
 ## 2026-08-15 — Public read-only web, authenticated internal MCP
+**Status:** superseded
+
+**Decision:** 최초 배포에서는 `md.yongduct.work`를 공개 읽기 전용으로 두고 쓰기를 내부 MCP로만 허용했다.
+
+**Reason:** Cloudflare Access 없이 공개하되 익명 사용자가 저장공간을 변경하지 못하게 하기 위한 초기 경계였다.
+
+## 2026-08-15 — Temporary public create/update
 **Status:** accepted
 
-**Decision:** `md.yongduct.work`는 공개 읽기 전용이다. 쓰기는 별도 내부 MCP port와 Bearer token으로만 허용한다.
+**Decision:** 사용자 요청에 따라 공개 Hubble UI와 REST에 Markdown 생성·수정을 허용한다. 공개 삭제·이동은 계속 차단하고, 내부 MCP의 Bearer 인증과 loopback 경계는 유지한다.
 
-**Reason:** Cloudflare Access 없이 공개하되 익명 사용자가 저장공간을 변경하지 못하게 한다.
+**Risk:** 인증이 없으므로 URL을 아는 누구나 문서를 생성하거나 수정할 수 있다. 개인·비공개 자료를 넣기 전 Access 또는 애플리케이션 인증을 도입해야 한다.
 
 ## 2026-08-15 — No existing content and no host mounts
 **Status:** accepted

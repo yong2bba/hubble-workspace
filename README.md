@@ -7,7 +7,7 @@
 ```text
 Public browser
   → Cloudflare Tunnel → Traefik
-  → container :3000 (Hubble UI + read-only REST)
+  → container :3000 (Hubble UI + anonymous create/update REST)
 
 Hermes / MCP client
   → SSH tunnel to Homebox loopback
@@ -21,7 +21,7 @@ container
 
 ## Packages
 
-- `apps/workspace-web`: upstream Hubble shared UI/editor를 사용하는 read-only React/Vite frontend
+- `apps/workspace-web`: upstream Hubble shared UI/editor를 사용하는 editable React/Vite frontend
 - `apps/workspace-server`: public REST/static server + separate authenticated MCP server
 - `deploy/homebox`: Compose와 Traefik route
 - `Dockerfile.workspace`: production multi-stage image
@@ -44,7 +44,7 @@ GET /api/files/content?path=notes/example.md
 GET /api/search?q=term
 ```
 
-Public mutation methods are not implemented and return 405.
+Public `POST /api/files` and `PUT /api/files/content` support Markdown create/update with SHA-256 conflict checks. Destructive and unknown mutation methods return 405. This temporary anonymous editing mode must not hold private material.
 
 ## MCP
 

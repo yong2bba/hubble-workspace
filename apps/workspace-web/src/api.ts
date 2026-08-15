@@ -36,3 +36,30 @@ export async function readFile(
 		}),
 	);
 }
+
+export async function createFile(
+	path: string,
+	content: string,
+): Promise<FileContent> {
+	return readJson<FileContent>(
+		await fetch("/api/files", {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({ path, content }),
+		}),
+	);
+}
+
+export async function updateFile(
+	path: string,
+	content: string,
+	expectedSha256: string,
+): Promise<FileContent> {
+	return readJson<FileContent>(
+		await fetch("/api/files/content", {
+			method: "PUT",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({ path, content, expectedSha256 }),
+		}),
+	);
+}
