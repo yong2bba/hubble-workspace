@@ -1,0 +1,43 @@
+services:
+  hubble-workspace:
+    build:
+      context: ../..
+      dockerfile: Dockerfile.workspace
+    container_name: homebox-hubble-workspace
+    restart: unless-stopped
+    init: true
+    env_file:
+      - .env
+    environment:
+      WORKSPACE_ROOT: /workspace
+      STATIC_DIR: /app/public
+      PUBLIC_PORT: 3000
+      MCP_PORT: 3001
+      MCP_ALLOWED_ORIGINS: ""
+    volumes:
+      - hubble_workspace_data:/workspace
+    ports:
+      - "127.0.0.1:13001:3001"
+    networks:
+      - homebox-edge
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+volumes:
+  hubble_workspace_data:
+    name: homebox_hubble_workspace_data
+
+networks:
+  homebox-edge:
+    external: true

@@ -1,0 +1,13 @@
+http:
+  routers:
+    hubble-workspace-public:
+      rule: Host(`md.yongduct.work`)
+      entryPoints:
+        - web
+      service: hubble-workspace-public
+
+  services:
+    hubble-workspace-public:
+      loadBalancer:
+        servers:
+          - url: http://homebox-hubble-workspace:3000

@@ -1,0 +1,17 @@
+**/.git
+**/node_modules
+**/dist
+apps/desktop
+apps/web
+apps/www
+packages/cli
+packages/convex-client
+packages/runtime
+packages/sync
+packages/sync-backend
+specs
+.hermes
+.env
+.env.*
+!.env.example
+.DS_Store

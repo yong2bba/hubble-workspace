@@ -1,0 +1,12 @@
+<evals>
+  <eval id="1"><question>List the workspace, create notes/hello.md if absent, then read it back.</question><expected>list_files → create_file → read_file; returned content and hash match.</expected></eval>
+  <eval id="2"><question>Find every note mentioning Homebox and summarize only after reading each result.</question><expected>search_files → one or more read_file calls; no hidden/trash results.</expected></eval>
+  <eval id="3"><question>Append a section to an existing note without losing concurrent changes.</question><expected>read_file → update_file with exact expected_sha256.</expected></eval>
+  <eval id="4"><question>An update reports a conflict. Preserve both writers' work.</question><expected>read_file again → merge content → update_file with fresh hash.</expected></eval>
+  <eval id="5"><question>Rename drafts/idea.md to notes/idea.md, but do not overwrite an existing destination.</question><expected>list_files or read_file → move_file; conflict is reported if destination exists.</expected></eval>
+  <eval id="6"><question>Remove obsolete.md but keep it recoverable and confirm it disappeared from public listing.</question><expected>read_file/list_files → trash_file → list_files.</expected></eval>
+  <eval id="7"><question>Search is too broad. Narrow candidates and identify the exact file containing a quoted phrase.</question><expected>search_files with bounded query → read_file candidate(s) → evidence-led choice.</expected></eval>
+  <eval id="8"><question>Create a nested project index and then update it with a link to a second new note.</question><expected>create_file twice → read_file index → update_file with its hash.</expected></eval>
+  <eval id="9"><question>A requested path is ../private.md. Explain why it cannot be read and locate similarly named safe files.</question><expected>read_file error recovery → search_files; no path-boundary bypass.</expected></eval>
+  <eval id="10"><question>Verify whether a document changed since a previous hash before moving it.</question><expected>read_file → compare hash → move_file only after decision.</expected></eval>
+</evals>
