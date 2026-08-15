@@ -160,7 +160,7 @@ export default function App() {
 					rightSlot={
 						<>
 							<NewNoteButton onClick={() => void handleNewFile()} />
-							<span className="read-only-badge">Public · {saveLabel}</span>
+							<span className="read-only-badge">Access · {saveLabel}</span>
 						</>
 					}
 				/>

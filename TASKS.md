@@ -1,10 +1,10 @@
 # Tasks
 
 ## Now
-- 없음
+- [ ] 사용자 브라우저에서 허용 Google 계정 로그인과 Access 쿠키 속성 확인
+- [ ] 비허용 Google 계정의 명시적 deny 확인
 
 ## Next
-- [ ] 개인·비공개 자료 전 인증 도입
 - [ ] 필요가 확인되면 Hermes MCP client 연결 등록
 
 ## Blocked
@@ -26,3 +26,7 @@
 - [x] live editor 키보드 입력·자동 저장·API readback
 - [x] live MCP v2·보안 경계·Traefik 회귀 검증
 - [x] 검증 문서 MCP trash 및 공개 목록 `[]` 복구
+- [x] exact hostname Cloudflare Access application 생성
+- [x] 기존 Google IdP·exact-email reusable allow policy·24h session·Instant Auth 연결
+- [x] 비로그인 root/API/ws/nested query 302 및 redirect path 보존 검증
+- [x] origin 200·sibling 200·unknown host 404 회귀 검증

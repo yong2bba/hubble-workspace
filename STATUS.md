@@ -7,8 +7,8 @@
 
 ## Production
 
-- Hubble UI: anonymous Markdown create/edit/autosave
-- Public REST: list/read/search/create/update
+- Hubble UI: Cloudflare Access-authenticated Markdown create/edit/autosave
+- Edge REST: Access-authenticated list/read/search/create/update
 - Destructive public methods: blocked with 405
 - Internal MCP: stable SDK v2, protocol `2026-07-28`, Homebox loopback only
 - Container: healthy, node user, read-only rootfs, restart count 0
@@ -30,6 +30,6 @@
 - No bearer: 401; hostile Host/Origin: 403; legacy GET: 405
 - Public `/mcp`: 404; unknown Traefik host: 404
 
-## Risk
+## Authentication
 
-Anonymous editing is a temporary accepted risk. Do not store private material before authentication is enabled.
+Cloudflare Access protects the exact hostname with Google SSO, 24-hour sessions, Instant Authentication, and the reusable exact-email allow policy. The application origin does not implement a second user login layer.

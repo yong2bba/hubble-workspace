@@ -17,7 +17,7 @@ Homebox의 격리된 Docker named volume을 사람과 에이전트가 함께 쓰
 - 공개 웹 편집·업로드·삭제
 - 터미널, 임의 명령, HTML App 실행
 - A2A 작업 오케스트레이션
-- Cloudflare Access 의존
+- Cloudflare Access 이외의 애플리케이션 자체 사용자 계정 체계
 
 ## Success Criteria
 - 외부 `https://md.yongduct.work`가 Hubble UI를 제공한다.

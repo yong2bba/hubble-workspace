@@ -15,11 +15,18 @@
 **Reason:** Cloudflare Access 없이 공개하되 익명 사용자가 저장공간을 변경하지 못하게 하기 위한 초기 경계였다.
 
 ## 2026-08-15 — Temporary public create/update
-**Status:** accepted
+**Status:** superseded
 
 **Decision:** 사용자 요청에 따라 공개 Hubble UI와 REST에 Markdown 생성·수정을 허용한다. 공개 삭제·이동은 계속 차단하고, 내부 MCP의 Bearer 인증과 loopback 경계는 유지한다.
 
-**Risk:** 인증이 없으므로 URL을 아는 누구나 문서를 생성하거나 수정할 수 있다. 개인·비공개 자료를 넣기 전 Access 또는 애플리케이션 인증을 도입해야 한다.
+**Risk:** 인증이 없으므로 URL을 아는 누구나 문서를 생성하거나 수정할 수 있다. 이 상태는 같은 날 Cloudflare Access 도입으로 종료됐다.
+
+## 2026-08-15 — Cloudflare Access + Google SSO
+**Status:** accepted
+
+**Decision:** 정확한 hostname `md.yongduct.work`에 전용 self-hosted Access application을 두고, 기존 Google IdP와 재사용 가능한 exact-email allow policy를 연결한다. 세션은 24시간, Instant Authentication을 사용한다.
+
+**Reason:** 웹 편집은 유지하되 익명 쓰기를 종료하고 기존 검증된 최소 권한 Google SSO 경계를 재사용한다. DNS, Tunnel, Traefik, origin, MCP 경계는 변경하지 않는다.
 
 ## 2026-08-15 — No existing content and no host mounts
 **Status:** accepted

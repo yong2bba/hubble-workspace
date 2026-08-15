@@ -22,5 +22,5 @@
 
 ## Glossary
 - Workspace: named volume content, not Artifact Garden
-- Public API: anonymous Markdown list/read/search/create/update HTTP API; destructive methods remain blocked
+- Edge API: Cloudflare Access-authenticated Markdown list/read/search/create/update; destructive methods remain blocked
 - MCP: authenticated agent tool API

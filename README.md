@@ -5,9 +5,9 @@
 ## Architecture
 
 ```text
-Public browser
-  → Cloudflare Tunnel → Traefik
-  → container :3000 (Hubble UI + anonymous create/update REST)
+Authenticated browser
+  → Cloudflare Access (Google SSO) → Cloudflare Tunnel → Traefik
+  → container :3000 (Hubble UI + create/update REST)
 
 Hermes / MCP client
   → SSH tunnel to Homebox loopback
@@ -44,7 +44,7 @@ GET /api/files/content?path=notes/example.md
 GET /api/search?q=term
 ```
 
-Public `POST /api/files` and `PUT /api/files/content` support Markdown create/update with SHA-256 conflict checks. Destructive and unknown mutation methods return 405. This temporary anonymous editing mode must not hold private material.
+Cloudflare Access protects the exact `md.yongduct.work` hostname with Google SSO and the reusable exact-email allow policy. `POST /api/files` and `PUT /api/files/content` support Markdown create/update with SHA-256 conflict checks; destructive and unknown mutation methods return 405. The origin still relies on the Access edge for human authentication.
 
 ## MCP
 
