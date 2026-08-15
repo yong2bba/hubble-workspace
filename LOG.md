@@ -12,3 +12,6 @@
 - User explicitly approved temporary anonymous editing. Added public Markdown create/update with SHA-256 conflict checks while destructive public methods remain blocked.
 - Migrated MCP from SDK v1 / protocol 2025-06-18 to stable SDK v2 / protocol 2026-07-28 with request-scoped servers, Host/Origin validation, bearer auth, and legacy transport rejection.
 - Passed 9 server tests, web/server builds, React Compiler audit (3/0), Biome (22 files), and an ephemeral Docker v2/public-edit smoke; resources were removed.
+- Redeployed Homebox at commit `46c0b59890b9633cf768d9d574993d2ad6153adf`; container is healthy with node user, read-only rootfs, named-volume-only storage, and zero restarts.
+- Verified live Hubble keyboard editing and autosave (`저장됨`) with exact API readback, then trashed the smoke document through MCP and restored public files to `[]`.
+- Verified live MCP `2026-07-28` negotiation and 7 tools; no bearer 401, hostile Host/Origin 403, legacy GET 405, public MCP 404, known route 200, and unknown Traefik host 404.

@@ -1,27 +1,34 @@
 # Status
 
-**State:** Update verified locally; production redeploy pending
+**State:** Live and verified
 **URL:** https://md.yongduct.work
 **Source:** https://github.com/yong2bba/hubble-workspace
+**Production commit:** `46c0b59890b9633cf768d9d574993d2ad6153adf`
 
-## Pending Production Change
+## Production
 
 - Hubble UI: anonymous Markdown create/edit/autosave
 - Public REST: list/read/search/create/update
 - Destructive public methods: blocked with 405
-- Internal MCP: stable SDK v2, protocol `2026-07-28`
+- Internal MCP: stable SDK v2, protocol `2026-07-28`, Homebox loopback only
+- Container: healthy, node user, read-only rootfs, restart count 0
+- Storage: named volume `homebox_hubble_workspace_data`
+- Public files after smoke cleanup: `[]`
 
-## Local Verification
+## Verification
 
 - Server tests: 9/9 PASS
 - Web/server production builds: PASS
 - React Compiler audit: 3 compiled, 0 failed
 - Biome: 22 files PASS
+- Production dependency audit: 0 vulnerabilities
 - Docker build and ephemeral volume smoke: PASS
-- Public create/update: PASS with SHA-256 conflict control
-- Public destructive method: 405
+- Live Hubble editor keyboard input: PASS
+- Live autosave badge: `저장됨`
+- Live API readback: typed `Marker:UI` content matched
 - MCP v2 negotiation: `2026-07-28`, 7 tools
-- MCP GET: 405; hostile Host/Origin: 403
+- No bearer: 401; hostile Host/Origin: 403; legacy GET: 405
+- Public `/mcp`: 404; unknown Traefik host: 404
 
 ## Risk
 
