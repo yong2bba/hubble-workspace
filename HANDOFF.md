@@ -14,7 +14,7 @@ blockers:
 ## Last Work
 - `md.yongduct.work` exact hostname에 Cloudflare Access self-hosted application을 만들고 기존 Google IdP·exact-email reusable allow policy를 연결했다.
 - 비로그인 root/API/ws/nested query가 모두 team login 302이며 redirect path/query가 보존되는 것을 확인했다. origin·sibling·unknown-host 회귀도 통과했다.
-- Homebox를 commit `46c0b59890b9633cf768d9d574993d2ad6153adf`로 재배포했다.
+- Homebox를 commit `bf9b315fceac55b966ae423a9c93b4c5fbe45d74`로 재배포했고 UI 상태 표시는 `Access ·`로 바뀌었다.
 - 공개 Hubble editor에서 실제 문서를 열고 키보드로 `UI`를 입력했다. 배지가 `저장됨`으로 바뀌었고 API readback이 `Marker:UI`를 반환했다.
 - 공개 REST의 생성·수정과 SHA-256 충돌 검사를 확인했다. 삭제·이동·기타 mutation은 계속 405다.
 - 내부 MCP는 stable SDK v2 / protocol `2026-07-28`로 협상했고 7 tools, Bearer 401, hostile Host/Origin 403, legacy GET 405를 확인했다.

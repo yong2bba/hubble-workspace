@@ -1,9 +1,9 @@
 # Status
 
-**State:** Live and verified
+**State:** Access edge live; machine verification complete, human identity acceptance pending
 **URL:** https://md.yongduct.work
 **Source:** https://github.com/yong2bba/hubble-workspace
-**Production commit:** `46c0b59890b9633cf768d9d574993d2ad6153adf`
+**Production commit:** `bf9b315fceac55b966ae423a9c93b4c5fbe45d74`
 
 ## Production
 
@@ -29,6 +29,12 @@
 - MCP v2 negotiation: `2026-07-28`, 7 tools
 - No bearer: 401; hostile Host/Origin: 403; legacy GET: 405
 - Public `/mcp`: 404; unknown Traefik host: 404
+- Access application: exact `md.yongduct.work`, self-hosted, Google IdP, exact-email reusable allow policy
+- Access session: 24h; Instant Authentication: enabled
+- Unauthenticated root/API/ws/nested query: 302 with exact redirect path/query preservation
+- Google SSO handoff: Google sign-in page reached
+- Homebox origin: 200; unaffected sibling: 200; unknown host: 404
+- Deployed UI badge: `Access ·`; bundle verification PASS
 
 ## Authentication
 
